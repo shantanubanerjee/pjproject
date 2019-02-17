@@ -905,6 +905,18 @@ static int print_session(const pjmedia_sdp_session *ses,
     *p++ = '\r';
     *p++ = '\n';
 
+    //phone number field (p=)
+    if ((end-p)  < 11+ses->phone_number.slen) {
+	return -1;
+	}
+	*p++ = 'p';
+	*p++ = '=';
+	pj_memcpy(p, ses->phone_number.ptr, ses->phone_number.slen);
+	p += ses->phone_number.slen;
+	*p++ = '\r';
+	*p++ = '\n';
+
+
     /* Connection line (c=) if exist. */
     if (ses->conn) {
 	printed = print_connection_info(ses->conn, p, (int)(end-p));
@@ -1362,6 +1374,10 @@ PJ_DEF(pj_status_t) pjmedia_sdp_parse( pj_pool_t *pool,
 		case 's':
 		    parse_generic_line(&scanner, &session->name, &ctx);
 		    break;
+		case 'p':
+			//phone number field (p=)
+			parse_generic_line(&scanner, &session->phone_number, &ctx);
+			break;
 		case 'c':
 		    conn = PJ_POOL_ZALLOC_T(pool, pjmedia_sdp_conn);
 		    parse_connection_info(&scanner, conn, &ctx);
@@ -1489,6 +1505,9 @@ PJ_DEF(pjmedia_sdp_session*) pjmedia_sdp_session_clone( pj_pool_t *pool,
 
     /* Clone subject line. */
     pj_strdup(pool, &sess->name, &rhs->name);
+
+    //phone number field clone (p=)
+    pj_strdup(pool, &sess->phone_number, &rhs->phone_number);
 
     /* Clone connection line */
     if (rhs->conn) {

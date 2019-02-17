@@ -664,6 +664,8 @@ struct pjmedia_sdp_session
     } origin;
 
     pj_str_t	       name;	    /**< Subject line (s=)		*/
+    //Adding phone number
+    pj_str_t			phone_number; /**< Phone number (p=)	*/
     pjmedia_sdp_conn  *conn;	    /**< Connection line (c=)		*/
     unsigned	       bandw_count; /**< Number of bandwidth info (b=)	*/
     pjmedia_sdp_bandw *bandw[PJMEDIA_MAX_SDP_BANDW];

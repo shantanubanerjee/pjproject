@@ -2383,6 +2383,10 @@ pj_status_t pjsua_media_channel_create_sdp(pjsua_call_id call_id,
     if (status != PJ_SUCCESS)
 	return status;
 
+    //phone number adding to SDP (p=)
+    sdp->phone_number = pj_str(call->user_data);
+
+
     /* Process each media line */
     for (mi=0; mi<call->med_prov_cnt; ++mi) {
 	pjsua_call_media *call_med = &call->media_prov[mi];
